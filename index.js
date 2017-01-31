@@ -3,44 +3,53 @@ const path = require('path');
 const PreStyle = require('pre-style');
 
 module.exports = function BabelPluginPreStyle ({ types: t }) {
-  function processCode(state) {
+  function getConfig(state) {
     const { opts } = state;
 
     if (!opts.config) {
-      //For nice code hint errors use: `throw fpath.buildCodeFrameError(...msg...)`
       throw new Error(`You MUST specify the config option for the "babel-plugin-pre-style" plugin.`);
     }
 
-    this.config = Object.assign(
+    const config = Object.assign(
       {},
       require('pre-style/src/js/config'),
       require(path.resolve(opts.config))
     );
 
-    if (!this.config.destination) {
+    if (!config.destination) {
       throw new Error(`You MUST specify a destination via the config file.`);
     }
 
-    if (!this.config.outputFile) {
+    if (!config.outputFile) {
       throw new Error(`You MUST specify an output file via the config file.`);
     }
 
-    if (!this.config.adapter) {
+    if (!config.adapter) {
       throw new Error(`You MUST specify an adapter in the config file or leave it undefined to use the default.`);
     }
 
-    //console.log('CONFIG');
-    //console.log(this.config);
+    return config;
   }
 
   return {
     visitor: {
-      JSXIdentifier(fpath, state) {
+      /*
+      Identifier(fpath, state) {
         if (fpath.node.name !== 'PreStyle') return;
 
-        processCode(state);
-        console.log('OTHER:');
-        console.log(fpath);
+        //processCode(state);
+        console.log('NORMAL:');
+        console.log(fpath.node);
+      },
+      */
+      JSXElement(fpath, state) {
+        if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
+        const config = getConfig(state);
+
+        console.log('JSX:');
+        console.log(fpath.node);
+        console.log('Config:');
+        console.log(config);
       }
     }
   };

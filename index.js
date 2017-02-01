@@ -3,10 +3,16 @@
 const fs = require('fs');
 const path = require('path');
 const chalk = require('chalk');
+const union = require('lodash/union');
+const flattenDeep = require('lodash/flattenDeep');
 const codeFrame = require('babel-code-frame');
 const PreStyle = require('pre-style');
 
 module.exports = function BabelPluginPreStyle ({ types: t }) {
+  const writer = {
+    cssObjsToWrite: []
+  };
+
   function getConfig(state) {
     const { opts } = state;
 
@@ -32,7 +38,30 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       throw new Error(`You MUST specify an adapter in the config file or leave it undefined to use the default.`);
     }
 
+    writer.config = config;
     return config;
+  }
+
+  function writeToFile() {
+    const cssObjs = writer.cssObjsToWrite.concat([]);
+    writer.cssObjsToWrite = [];
+
+    fs.mkdir(path.resolve(writer.config.destination), () => {
+      const cssContent = cssObjs.map(cssObj => cssObj.css).join('');
+      const classnameContent = JSON.stringify(union(flattenDeep(cssObjs.map(cssObj => cssObj.classNames.split(' ')))));
+
+      console.log('SUCCESS', cssContent);
+
+      fs.writeFile(path.resolve(writer.config.destination, writer.config.outputFile), cssContent, (err) => {
+        if (err) throw err;
+        console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(writer.config.outputFile))} ${chalk.green('created.')}`);
+      });
+
+      fs.writeFile(path.resolve(writer.config.destination, `${writer.config.outputFile}.classNames.json`), classnameContent, (err) => {
+        if (err) throw err;
+        console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${writer.config.outputFile}.classNames.json`))} ${chalk.green('created.')}`);
+      });
+    });
   }
 
   return {
@@ -44,10 +73,9 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
         const cf = codeFrame(fpath.hub.file.code, fpath.node.loc.start.line, fpath.node.loc.start.column, { highlightCode: true });
 
         PreStyle(css, config).then((data) => {
-          console.log('SUCCESS');
-          console.log(data);
+          writer.cssObjsToWrite.push(data);
         }, (e) => {
-          console.log(chalk.red(`The PreStyle Adapter ran into an error:\r\n${chalk.bold(e)}`));
+          console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
           process.exit();
         });
@@ -59,14 +87,17 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
         const cf = codeFrame(fpath.hub.file.code, fpath.node.loc.start.line, fpath.node.loc.start.column, { highlightCode: true });
 
         PreStyle(css, config).then((data) => {
-          console.log('SUCCESS');
-          console.log(data);
+          writer.cssObjsToWrite.push(data);
         }, (e) => {
-          console.log(chalk.red(`The PreStyle Adapter ran into an error:\r\n${chalk.bold(e)}`));
+          console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
           process.exit();
         });
       }
+    },
+    post() {
+      if (writer.cssObjsToWrite.length) writeToFile();
+      console.log('TEST');
     }
   };
 };

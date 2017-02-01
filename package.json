@@ -26,6 +26,7 @@
   "dependencies": {
     "babel-code-frame": "^6.22.0",
     "chalk": "^1.1.3",
+    "lodash": "^4.17.4",
     "pre-style": "^1.0.1-alpha.1"
   },
   "devDependencies": {

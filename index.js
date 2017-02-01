@@ -47,7 +47,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
           console.log('SUCCESS');
           console.log(data);
         }, (e) => {
-          console.log(chalk.red(`The PreStyle Adapter ran into an error: ${chalk.bold(e)}`));
+          console.log(chalk.red(`The PreStyle Adapter ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
           process.exit();
         });
@@ -62,7 +62,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
           console.log('SUCCESS');
           console.log(data);
         }, (e) => {
-          console.log(chalk.red(`The PreStyle Adapter ran into an error: ${chalk.bold(e)}`));
+          console.log(chalk.red(`The PreStyle Adapter ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
           process.exit();
         });

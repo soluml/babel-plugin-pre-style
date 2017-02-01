@@ -38,16 +38,25 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
         const config = getConfig(state);
         const css = fpath.node.quasi.quasis[0].value.raw;
 
-        console.log('=============');
-        console.log(css);
+        Promise.reject().then((data) => {
+          console.log('SUCCESS');
+          console.log(data);
+        }).catch((e) => {
+          throw fpath.buildCodeFrameError('PreStyle ran into errors processing the following CSS:');
+        }).catch((e) => {
+          process.stdout.write(e);
+        });
       },
       JSXElement(fpath, state) {
         if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
         const config = getConfig(state);
         const css = fpath.node.children[0].value;
 
-        console.log('=============');
-        console.log(css);
+        PreStyle(css, config)
+          .then((data) => {
+            console.log('SUCCESS');
+            console.log(data);
+          });
       }
     }
   };

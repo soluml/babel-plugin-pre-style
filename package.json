@@ -24,7 +24,9 @@
   },
   "homepage": "https://github.com/soluml/babel-plugin-pre-style#readme",
   "dependencies": {
-    "pre-style": "^1.0.0-alpha.1"
+    "babel-code-frame": "^6.22.0",
+    "chalk": "^1.1.3",
+    "pre-style": "^1.0.1-alpha.1"
   },
   "devDependencies": {
     "eslint": "^3.13.0",

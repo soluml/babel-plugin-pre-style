@@ -33,23 +33,21 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
   return {
     visitor: {
-      /*
-      Identifier(fpath, state) {
-        if (fpath.node.name !== 'PreStyle') return;
+      TaggedTemplateExpression(fpath, state) {
+        if (fpath.node.tag.name !== 'PreStyle') return;
+        const config = getConfig(state);
+        const css = fpath.node.quasi.quasis[0].value.raw;
 
-        //processCode(state);
-        console.log('NORMAL:');
-        console.log(fpath.node);
+        console.log('=============');
+        console.log(css);
       },
-      */
       JSXElement(fpath, state) {
         if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
         const config = getConfig(state);
+        const css = fpath.node.children[0].value;
 
-        console.log('JSX:');
-        console.log(fpath.node);
-        console.log('Config:');
-        console.log(config);
+        console.log('=============');
+        console.log(css);
       }
     }
   };

@@ -1,29 +1,35 @@
-/* eslint no-console: 0, global-require: 0, no-cond-assign: 0, no-param-reassign: 0, import/no-dynamic-require: 0 */
+/* eslint no-console: 0, global-require: 0, no-cond-assign: 0, no-param-reassign: 0, import/no-dynamic-require: 0, no-empty: 1 */
 
 const fs = require('fs');
 const path = require('path');
 const execSync = require('child_process').execSync;
+const util = require('util');
 const chalk = require('chalk');
-const union = require('lodash/union');
-const flattenDeep = require('lodash/flattenDeep');
 
 module.exports = function BabelPluginPreStyle ({ types: t }) {
-  const toBeWritten = [];
+  const classNames = {};
+  let css = '';
   let lastWroteLength = 0;
   let config;
 
-  function doPreStyle(fpath, css, configFileName) {
+  function doPreStyle(fpath, cssStr, configFileName) {
     let data;
 
     try {
-      data = execSync(`node ${path.resolve(__dirname, 'child.js')}`, { timeout: 60000, env: { css, config: configFileName } });
+      const existing_strings = JSON.stringify(classNames);
+
+      data = execSync(
+        `node ${path.resolve(__dirname, 'child.js')}`,
+        { timeout: 60000, env: { css: cssStr, config: configFileName, existing_strings } }
+      );
       data = JSON.parse(data);
     } catch (e) {
       throw fpath.buildCodeFrameError(e);
     }
 
-    toBeWritten.push(data);
-    fpath.replaceWith(t.StringLiteral(data.classNames));
+    Object.assign(classNames, data.classNames);
+    css += data.css;
+    fpath.replaceWith(t.StringLiteral(Object.keys(data.classNames).map(key => data.classNames[key]).join(' ')));
   }
 
   return {
@@ -53,21 +59,18 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       }
     },
     post() {
-      if (toBeWritten.length === 0 || lastWroteLength === toBeWritten.length) return;
-      lastWroteLength = toBeWritten.length;
+      if (css.length === 0 || lastWroteLength === css.length) return;
+      lastWroteLength = css.length;
 
       try {
         fs.mkdirSync(path.resolve(config.destination));
       } catch (e) {}
 
-      const cssContent = toBeWritten.map(cssObj => cssObj.css).join('');
-      const classnameContent = JSON.stringify(union(flattenDeep(toBeWritten.map(cssObj => cssObj.classNames.split(' ')))));
-
-      fs.writeFileSync(path.resolve(config.destination, config.outputFile), cssContent);
+      fs.writeFileSync(path.resolve(config.destination, config.outputFile), css);
       console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
 
-      fs.writeFileSync(path.resolve(config.destination, `${config.outputFile}.classNames.json`), classnameContent);
-      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.json`))} ${chalk.green('created.')}`);
+      fs.writeFileSync(path.resolve(config.destination, `${config.outputFile}.classNames.js`), `module.exports = ${util.inspect(classNames)};`);
+      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.js`))} ${chalk.green('created.')}`);
     },
     visitor: {
       TaggedTemplateExpression(fpath) {

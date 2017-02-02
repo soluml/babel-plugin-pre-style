@@ -65,7 +65,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
-          fpath.node = t.StringLiteral(data.classNames);
+          fpath.replaceWith(t.StringLiteral(data.classNames));
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
@@ -80,7 +80,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
-          fpath.node = t.StringLiteral(data.classNames);
+          fpath.replaceWith(t.StringLiteral(data.classNames));
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);

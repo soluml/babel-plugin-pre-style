@@ -52,24 +52,12 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
       console.log(cssContent);
       console.log(classnameContent);
-      /*
-      fs.mkdir(path.resolve(config.destination), () => {
-        const cssContent = cssObjs.map(cssObj => cssObj.css).join('');
-        const classnameContent = JSON.stringify(union(flattenDeep(cssObjs.map(cssObj => cssObj.classNames.split(' ')))));
 
-        console.log('SUCCESS', cssContent);
+      fs.writeFileSync(path.resolve(config.destination, config.outputFile), cssContent);
+      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
 
-        fs.writeFile(path.resolve(config.destination, config.outputFile), cssContent, (err) => {
-          if (err) throw err;
-          console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
-        });
-
-        fs.writeFile(path.resolve(config.destination, `${config.outputFile}.classNames.json`), classnameContent, (err) => {
-          if (err) throw err;
-          console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.json`))} ${chalk.green('created.')}`);
-        });
-      });
-      */
+      fs.writeFileSync(path.resolve(config.destination, `${config.outputFile}.classNames.json`), classnameContent);
+      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.json`))} ${chalk.green('created.')}`);
     },
     visitor: {
       TaggedTemplateExpression(fpath, state) {

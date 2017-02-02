@@ -1,4 +1,4 @@
-/* eslint no-console: 0, global-require: 0, no-cond-assign: 0, import/no-dynamic-require: 0 */
+/* eslint no-console: 0, global-require: 0, no-cond-assign: 0, no-param-reassign: 0, import/no-dynamic-require: 0 */
 
 const fs = require('fs');
 const path = require('path');
@@ -57,7 +57,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.json`))} ${chalk.green('created.')}`);
     },
     visitor: {
-      TaggedTemplateExpression(fpath, state) {
+      TaggedTemplateExpression(fpath) {
         if (fpath.node.tag.name !== 'PreStyle') return;
 
         const css = fpath.node.quasi.quasis[0].value.raw;
@@ -65,14 +65,14 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
-          console.log('Modify underlying JS for TTE');
+          fpath.node = t.StringLiteral(data.classNames);
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
           process.exit();
         });
       },
-      JSXElement(fpath, state) {
+      JSXElement(fpath) {
         if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
 
         const css = fpath.node.children[0].value;
@@ -80,7 +80,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
-          console.log('Modify underlying JS for JSXE');
+          fpath.node = t.StringLiteral(data.classNames);
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);

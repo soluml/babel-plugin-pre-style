@@ -50,9 +50,6 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       const cssContent = toBeWritten.map(cssObj => cssObj.css).join('');
       const classnameContent = JSON.stringify(union(flattenDeep(toBeWritten.map(cssObj => cssObj.classNames.split(' ')))));
 
-      console.log(cssContent);
-      console.log(classnameContent);
-
       fs.writeFileSync(path.resolve(config.destination, config.outputFile), cssContent);
       console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
 
@@ -68,6 +65,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
+          console.log('Modify underlying JS for TTE');
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);
@@ -82,6 +80,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         PreStyle(css, config).then((data) => {
           toBeWritten.push(data);
+          console.log('Modify underlying JS for JSXE');
         }, (e) => {
           console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
           console.log(cf);

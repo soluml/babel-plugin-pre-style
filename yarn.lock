@@ -1134,10 +1134,6 @@ load-json-file@^1.0.0:
     pinkie-promise "^2.0.0"
     strip-bom "^2.0.0"
 
-lodash, lodash@^4.0.0, lodash@^4.17.4, lodash@^4.3.0:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
-
 lodash.assign@^4.0.3, lodash.assign@^4.0.6, lodash.assign@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
@@ -1161,6 +1157,10 @@ lodash.mergewith@^4.6.0:
 lodash.uniq@^4.3.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
+
+lodash@^4.0.0, lodash@^4.17.4, lodash@^4.3.0:
+  version "4.17.4"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
 lodash@~4.16.4:
   version "4.16.6"
@@ -1663,8 +1663,8 @@ postcss@^5.0.0, postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.
     supports-color "^3.2.3"
 
 pre-style:
-  version "1.0.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/pre-style/-/pre-style-1.0.2-alpha.1.tgz#5c0cfaa57b37a13ce93b45436338ebefd338201a"
+  version "1.0.3-alpha"
+  resolved "https://registry.yarnpkg.com/pre-style/-/pre-style-1.0.3-alpha.tgz#4cd2fc4b5c6279f7b4205be5ec3aaac86b6d9128"
   dependencies:
     chalk "^1.1.3"
     commander "^2.9.0"

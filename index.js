@@ -2,16 +2,29 @@
 
 const fs = require('fs');
 const path = require('path');
+const execSync = require('child_process').execSync;
 const chalk = require('chalk');
 const union = require('lodash/union');
 const flattenDeep = require('lodash/flattenDeep');
-const codeFrame = require('babel-code-frame');
-const PreStyle = require('pre-style');
 
 module.exports = function BabelPluginPreStyle ({ types: t }) {
   const toBeWritten = [];
   let lastWroteLength = 0;
   let config;
+
+  function doPreStyle(fpath, css, configFileName) {
+    let data;
+
+    try {
+      data = execSync(`node ${path.resolve(__dirname, 'child.js')}`, { timeout: 60000, env: { css, config: configFileName } });
+      data = JSON.parse(data);
+    } catch (e) {
+      throw fpath.buildCodeFrameError(e);
+    }
+
+    toBeWritten.push(data);
+    fpath.replaceWith(t.StringLiteral(data.classNames));
+  }
 
   return {
     pre() {
@@ -60,32 +73,12 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       TaggedTemplateExpression(fpath) {
         if (fpath.node.tag.name !== 'PreStyle') return;
 
-        const css = fpath.node.quasi.quasis[0].value.raw;
-        const cf = codeFrame(fpath.hub.file.code, fpath.node.loc.start.line, fpath.node.loc.start.column, { highlightCode: true });
-
-        PreStyle(css, config).then((data) => {
-          toBeWritten.push(data);
-          fpath.replaceWith(t.StringLiteral(data.classNames));
-        }, (e) => {
-          console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
-          console.log(cf);
-          process.exit();
-        });
+        doPreStyle(fpath, fpath.node.quasi.quasis[0].value.raw, this.opts.config);
       },
       JSXElement(fpath) {
         if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
 
-        const css = fpath.node.children[0].value;
-        const cf = codeFrame(fpath.hub.file.code, fpath.node.loc.start.line, fpath.node.loc.start.column, { highlightCode: true });
-
-        PreStyle(css, config).then((data) => {
-          toBeWritten.push(data);
-          fpath.replaceWith(t.StringLiteral(data.classNames));
-        }, (e) => {
-          console.log(chalk.red(`The PreStyle ran into an error:\r\n${chalk.bold(e)}`));
-          console.log(cf);
-          process.exit();
-        });
+        doPreStyle(fpath, fpath.node.children[0].value, this.opts.config);
       }
     }
   };

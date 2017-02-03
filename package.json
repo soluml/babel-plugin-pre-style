@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-pre-style",
-  "version": "1.0.3-alpha",
+  "version": "1.0.4-alpha",
   "description": "Babel plugin for Pre-Style",
   "main": "index.js",
   "scripts": {

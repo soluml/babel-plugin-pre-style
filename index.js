@@ -20,7 +20,10 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
       data = execSync(
         `node ${path.resolve(__dirname, 'child.js')}`,
-        { timeout: 60000, env: { css: cssStr, config: configFileName, existing_strings } }
+        {
+          timeout: 60000,
+          env: Object.assign({}, process.env, { css: cssStr, config: configFileName, existing_strings })
+        }
       );
       data = JSON.parse(data);
     } catch (e) {

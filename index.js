@@ -44,7 +44,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         config = Object.assign(
           {},
-          require('pre-style/src/js/config'),
+          require('pre-style/src/module/config'),
           require(path.resolve(this.opts.config))
         );
 

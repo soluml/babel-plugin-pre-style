@@ -7,7 +7,7 @@ PreStyle(
   css,
   Object.assign(
     {},
-    require('pre-style/src/js/config'),
+    require('pre-style/src/module/config'),
     require(path.resolve(config))
   ),
   JSON.parse(existing_strings)

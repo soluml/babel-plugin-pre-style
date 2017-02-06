@@ -63,6 +63,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
     },
     post() {
       if (lastWroteLength === css.length) return;
+      const hasWritten = !!~lastWroteLength;
       lastWroteLength = css.length;
 
       try {
@@ -70,10 +71,10 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       } catch (e) {}
 
       fs.writeFileSync(path.resolve(config.destination, config.outputFile), css);
-      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
+      if (!hasWritten) console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
 
       fs.writeFileSync(path.resolve(config.destination, `${config.outputFile}.classNames.js`), `module.exports = ${util.inspect(classNames)};`);
-      console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.js`))} ${chalk.green('created.')}`);
+      if (!hasWritten) console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.js`))} ${chalk.green('created.')}`);
     },
     visitor: {
       TaggedTemplateExpression(fpath) {

@@ -9,7 +9,7 @@ const chalk = require('chalk');
 module.exports = function BabelPluginPreStyle ({ types: t }) {
   const classNames = {};
   let css = '';
-  let lastWroteLength = 0;
+  let lastWroteLength = -1;
   let config;
 
   function doPreStyle(fpath, cssStr, configFileName) {
@@ -62,7 +62,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
       }
     },
     post() {
-      if (css.length === 0 || lastWroteLength === css.length) return;
+      if (lastWroteLength === css.length) return;
       lastWroteLength = css.length;
 
       try {

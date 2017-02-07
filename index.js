@@ -44,7 +44,7 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
           throw new Error(`You MUST specify an output file via the config file.`);
         }
 
-        if (!config.adapter) {
+        if (typeof config.adapter !== 'undefined' && typeof config.adapter !== 'string') {
           throw new Error(`You MUST specify a path to your adapter function in the config file or leave it undefined to use the default.`);
         }
       }

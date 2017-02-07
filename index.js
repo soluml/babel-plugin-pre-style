@@ -1,10 +1,8 @@
 /* eslint no-console: 0, global-require: 0, no-cond-assign: 0, no-param-reassign: 0, import/no-dynamic-require: 0, no-empty: 1 */
 
-const fs = require('fs');
 const path = require('path');
-const execSync = require('child_process').execSync;
-const util = require('util');
-const chalk = require('chalk');
+const writeFiles = require('pre-style/bin/writeFiles');
+const processBlock = require('pre-style/bin/processBlock');
 
 module.exports = function BabelPluginPreStyle ({ types: t }) {
   const classNames = {};
@@ -12,20 +10,11 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
   let lastWroteLength = -1;
   let config;
 
-  function doPreStyle(fpath, cssStr, configFileName) {
+  function doPreStyle(fpath, cssStr) {
     let data;
 
     try {
-      const existing_strings = JSON.stringify(classNames);
-
-      data = execSync(
-        `node ${path.resolve(__dirname, 'child.js')}`,
-        {
-          timeout: 60000,
-          env: Object.assign({}, process.env, { css: cssStr, config: configFileName, existing_strings })
-        }
-      );
-      data = JSON.parse(data);
+      data = processBlock(cssStr, config, classNames);
     } catch (e) {
       throw fpath.buildCodeFrameError(e);
     }
@@ -44,7 +33,6 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
 
         config = Object.assign(
           {},
-          require('pre-style/src/module/config'),
           require(path.resolve(this.opts.config))
         );
 
@@ -57,35 +45,28 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
         }
 
         if (!config.adapter) {
-          throw new Error(`You MUST specify an adapter in the config file or leave it undefined to use the default.`);
+          throw new Error(`You MUST specify a path to your adapter function in the config file or leave it undefined to use the default.`);
         }
       }
     },
     post() {
       if (lastWroteLength === css.length) return;
+
       const hasWritten = !!~lastWroteLength;
       lastWroteLength = css.length;
 
-      try {
-        fs.mkdirSync(path.resolve(config.destination));
-      } catch (e) {}
-
-      fs.writeFileSync(path.resolve(config.destination, config.outputFile), css);
-      if (!hasWritten) console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(config.outputFile))} ${chalk.green('created.')}`);
-
-      fs.writeFileSync(path.resolve(config.destination, `${config.outputFile}.classNames.js`), `module.exports = ${util.inspect(classNames)};`);
-      if (!hasWritten) console.log(`${chalk.green('File')} ${chalk.cyan(path.basename(`${config.outputFile}.classNames.js`))} ${chalk.green('created.')}`);
+      writeFiles({ css, classNames }, config, hasWritten);
     },
     visitor: {
       TaggedTemplateExpression(fpath) {
         if (fpath.node.tag.name !== 'PreStyle') return;
 
-        doPreStyle(fpath, fpath.node.quasi.quasis[0].value.raw, this.opts.config);
+        doPreStyle(fpath, fpath.node.quasi.quasis[0].value.raw);
       },
       JSXElement(fpath) {
         if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
 
-        doPreStyle(fpath, fpath.node.children[0].value, this.opts.config);
+        doPreStyle(fpath, fpath.node.children[0].value);
       }
     }
   };

@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-pre-style",
-  "version": "1.0.4-alpha",
+  "version": "1.0.5-alpha",
   "description": "Babel plugin for Pre-Style",
   "main": "index.js",
   "scripts": {
@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/soluml/babel-plugin-pre-style#readme",
   "dependencies": {
-    "chalk": "^1.1.3",
-    "pre-style": "^1.0.3-alpha"
+    "pre-style": "^1.0.5-alpha"
   },
   "devDependencies": {
     "eslint": "^3.13.0",

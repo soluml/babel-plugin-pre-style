@@ -47,6 +47,8 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
         if (typeof config.adapter !== 'undefined' && typeof config.adapter !== 'string') {
           throw new Error(`You MUST specify a path to your adapter function in the config file or leave it undefined to use the default.`);
         }
+
+        config.nameSpaces = ['PreStyle'].concat(Array.isArray(config.nameSpaces) ? config.nameSpaces : []);
       }
     },
     post() {
@@ -59,14 +61,9 @@ module.exports = function BabelPluginPreStyle ({ types: t }) {
     },
     visitor: {
       TaggedTemplateExpression(fpath) {
-        if (fpath.node.tag.name !== 'PreStyle') return;
+        if (!~config.nameSpaces.indexOf(fpath.node.tag.name)) return;
 
         doPreStyle(fpath, fpath.node.quasi.quasis[0].value.raw);
-      },
-      JSXElement(fpath) {
-        if (fpath.node.openingElement.name.name !== 'PreStyle' || fpath.node.closingElement.name.name !== 'PreStyle') return;
-
-        doPreStyle(fpath, fpath.node.children[0].value);
       }
     }
   };

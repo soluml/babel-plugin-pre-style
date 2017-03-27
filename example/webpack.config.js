@@ -21,13 +21,11 @@ const config = {
 
   // The entry point for the bundle
   entry: {
-    app: ['./js/app/index.js'],
     vendor: [
       'react',
       'react-dom',
-      'redux',
-      'react-redux',
     ],
+    app: ['./js/index.js'],
   },
 
   resolve: {
@@ -69,10 +67,6 @@ const config = {
       template: 'index.html',
       inject: false,
       minify: { collapseWhitespace: true }
-    }),
-    new webpack.DefinePlugin({
-      API_HOST: isDebug ? '"http://localhost:1337"' : '""',
-      __DEV__: isDebug,
     }),
   ],
 

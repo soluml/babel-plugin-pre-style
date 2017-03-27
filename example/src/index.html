@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Language" content="en_US">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no">
+  <title>Pre-Style Demo</title>
+  <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[css] %>">
+  <% } %>
+  <% for (var js in htmlWebpackPlugin.files.js) { if(htmlWebpackPlugin.files.js[js].startsWith('/js/head')) { %>
+    <script id="script" src="<%= htmlWebpackPlugin.files.js[js] %>?API_ROOT_URL=https://MYAPP.dev.lifeway.com&GA_KEY="></script>
+  <% }} %>
+</head>
+<body>
+  <!-- BUILD_NUMBER -->
+  <% if (webpackConfig.debug) { %>
+  <script>
+  // Development: reload css on hot update
+  /* via https://github.com/webpack/extract-text-webpack-plugin/issues/30#issuecomment-219852782 */
+  var cssFileName = 'app.css';
+  var originalCallback = window.webpackHotUpdate;
+
+  window.webpackHotUpdate = function (args) {
+    var link = document.querySelector('link[href$="app.css"]');
+
+    if (link) {
+      var newLink = document.createElement('link');
+
+      newLink.setAttribute('href', link.href + '?d=' + Date.now());
+      newLink.setAttribute('rel', 'stylesheet');
+      newLink.onload = function(){ link.remove(); }
+      document.head.appendChild(newLink);
+    };
+  };
+  </script>
+  <% } %>
+  <div id="wrapper">
+    <noscript>
+      <p>This page requires JavaScript to run. Please enable it in your browser.</p>
+    </noscript>
+  </div>
+  <% for (var js in htmlWebpackPlugin.files.js) { if(!htmlWebpackPlugin.files.js[js].startsWith('/js/head')) { %>
+  <script src="<%= htmlWebpackPlugin.files.js[js] %>"></script>
+  <% }} %>
+</body>
+</html>

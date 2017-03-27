@@ -1,0 +1,7 @@
+{
+  "presets": ["es2015", "es2016", "es2017", "react"],
+  "plugins": [
+    "transform-object-rest-spread",
+    ["pre-style", { "config": "PreStyleConfig.js" }]
+  ]
+}

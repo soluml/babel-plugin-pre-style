@@ -19,3 +19,6 @@ To use with Babel, add the following to your `.babelrc` file:
 ```
 
 ## Examples
+
+#### With React:
+- Babel Plugin Example

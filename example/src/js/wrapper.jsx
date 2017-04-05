@@ -6,6 +6,8 @@ export default class wrapper extends React.Component {
       div: {
         className: PreStyle`
           color: blue;
+          font-weight: bold;
+          text-align: center;
         `
       }
     };

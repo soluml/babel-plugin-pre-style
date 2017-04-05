@@ -10,6 +10,11 @@
     "node": true,
     "mocha": true
   },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
   "rules": {
     "eqeqeq": 1,
     "global-require": 1,

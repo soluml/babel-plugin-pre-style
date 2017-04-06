@@ -30,12 +30,19 @@ export default class wrapper extends React.Component {
           (tickMod === 1 && PreStyle`color: $color2;`), //Initially returns: "H"; $color2 is in our _vars Sass partial
           (tickMod === 2 && PreStyle`color: $color3;`)  //Initially returns: "I"; $color3 is in our _vars Sass partial
         )
+      },
+      p: {
+        //The following initially returns "E", because we've already used it before. Your properties are completely reusable without bloating the resulting CSS file
+        className: PreStyle`
+          text-align: center;
+        `
       }
     };
 
-    return (<h1 {...attrs.h1}>
-      Hello World!
-    </h1>);
+    return (<main>
+      <h1 {...attrs.h1}>Hello World!</h1>
+      <p {...attrs.p}>This is the React + Webpack + HMR demo. Hit up Github Issues if anything is unclear!</p>
+    </main>);
   }
 
   componentDidMount() {

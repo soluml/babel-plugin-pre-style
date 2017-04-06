@@ -5,7 +5,7 @@
   "scripts": {
     "prebuild": "rimraf build",
     "build": "NODE_ENV=production webpack -p --release",
-    "start": "browser-sync start --config 'bs-config.js'"
+    "start": "browser-sync start --config bs-config.js"
   },
   "dependencies": {
     "react": "^15.4.2",

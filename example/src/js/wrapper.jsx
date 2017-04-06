@@ -11,15 +11,16 @@ export default class wrapper extends React.Component {
     const attrs = {
       h1: {
         className: [
+          //The following returns: "A B C"
           PreStyle`
             font-weight: bold;
             text-align: center;
             transition: color .115s ease-in;
           `,
-          (tickMod === 0 && PreStyle`color: red;`),
-          (tickMod === 1 && PreStyle`color: blue;`),
-          (tickMod === 2 && PreStyle`color: green;`)
-        ].join(' ')
+          (tickMod === 0 && PreStyle`color: red;`),  //Returns: "D"
+          (tickMod === 1 && PreStyle`color: blue;`), //Returns: "E"
+          (tickMod === 2 && PreStyle`color: green;`) //Returns: "F"
+        ].filter(str => str).join(' ')               //Filter out the "false" and join the classnames together into one string
       }
     };
 

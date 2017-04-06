@@ -15,12 +15,12 @@ export default class wrapper extends React.Component {
           PreStyle`
             font-weight: bold;
             text-align: center;
-            transition: color .115s ease-in;
+            transition: color .35s ease-in;
           `,
-          (tickMod === 0 && PreStyle`color: red;`),  //Returns: "D"
-          (tickMod === 1 && PreStyle`color: blue;`), //Returns: "E"
-          (tickMod === 2 && PreStyle`color: green;`) //Returns: "F"
-        ].filter(str => str).join(' ')               //Filter out the "false" and join the classnames together into one string
+          (tickMod === 0 && PreStyle`color: $color1;`), //Returns: "D"
+          (tickMod === 1 && PreStyle`color: $color2;`), //Returns: "E"
+          (tickMod === 2 && PreStyle`color: $color3;`)  //Returns: "F"
+        ].filter(str => str).join(' ')                  //Filter out the "false" and join the classnames together into one string
       }
     };
 
@@ -30,13 +30,13 @@ export default class wrapper extends React.Component {
   }
 
   componentDidMount() {
-    const tickFn = () => {
-      setTimeout(() => {
-        this.setState({ tick: this.state.tick + 1 });
-        tickFn();
-      }, 1000);
-    };
+    this.loadInterval = setInterval(() => {
+      this.setState({ tick: this.state.tick + 1 });
+    }, 1000);
+  }
 
-    tickFn();
+  componentWillUnmount () {
+    if (this.loadInterval) clearInterval(this.loadInterval);
+    this.loadInterval = false;
   }
 }

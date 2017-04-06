@@ -21,4 +21,4 @@ To use with Babel, add the following to your `.babelrc` file:
 ## Examples
 
 #### With React:
-- This example features a simple "Hello World" React application. We use PreStyle in the [wrapper.jsx file](/example/src/js/wrapper.jsx) to set the base styles for a `<h1>` tag and then change the color once a second. You can see the source for that [here](/example).
+- This example features a simple "Hello World" React application. We use PreStyle in the [wrapper.jsx file](/example/src/js/wrapper.jsx) to set the base styles for a `<h1>` tag and then change the color once a second. To see the example, download the example folder and do a `npm install`. Once all the dependencies have loaded, simply run `npm start`. The example features Hot Module Reloading so you can play with the markup and PreStyle live. The source for this example is [here](/example).

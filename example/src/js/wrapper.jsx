@@ -1,11 +1,5 @@
 import React from 'react';
 
-function joinCSSClasses(...classNames) {
-  return classNames
-    .filter(className => className)
-    .join(' ');
-}
-
 export default class wrapper extends React.Component {
   constructor() {
     super();
@@ -16,7 +10,7 @@ export default class wrapper extends React.Component {
     const tickMod = this.state.tick % 3;
     const attrs = {
       h1: {
-        className: joinCSSClasses(
+        className: [
           PreStyle`
             font-weight: bold;
             text-align: center;
@@ -25,7 +19,7 @@ export default class wrapper extends React.Component {
           (tickMod === 0 && PreStyle`color: red;`),
           (tickMod === 1 && PreStyle`color: blue;`),
           (tickMod === 2 && PreStyle`color: green;`)
-        )
+        ].join(' ')
       }
     };
 

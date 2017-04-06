@@ -5,3 +5,9 @@
 $color1: red;
 $color2: blue;
 $color3: green;
+
+@mixin overflow-text-boundry() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

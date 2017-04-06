@@ -19,15 +19,16 @@ export default class wrapper extends React.Component {
     const attrs = {
       h1: {
         className: joinCSSClasses(
-          //The following returns: "A B C"
+          //The following initially returns: "A B C D E F"
           PreStyle`
+            @include overflow-text-boundry(); //<- Using a Sass mixin from our _vars Sass partial
             font-weight: bold;
             text-align: center;
             transition: color .35s ease-in;
           `,
-          (tickMod === 0 && PreStyle`color: $color1;`), //Returns: "D"
-          (tickMod === 1 && PreStyle`color: $color2;`), //Returns: "E"
-          (tickMod === 2 && PreStyle`color: $color3;`)  //Returns: "F"
+          (tickMod === 0 && PreStyle`color: $color1;`), //Initially returns: "G"; $color1 is in our _vars Sass partial
+          (tickMod === 1 && PreStyle`color: $color2;`), //Initially returns: "H"; $color2 is in our _vars Sass partial
+          (tickMod === 2 && PreStyle`color: $color3;`)  //Initially returns: "I"; $color3 is in our _vars Sass partial
         )
       }
     };

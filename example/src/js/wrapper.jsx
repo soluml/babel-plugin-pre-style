@@ -31,9 +31,10 @@ export default class wrapper extends React.Component {
           (tickMod === 2 && PreStyle`color: $color3;`)  //Initially returns: "I"; $color3 is in our _vars Sass partial
         )
       },
-      p: {
-        //The following initially returns "E", because we've already used it before. Your properties are completely reusable without bloating the resulting CSS file
+      h2: {
+        //The following initially returns "D E", because we've already used these properties before. Your properties are completely reusable without bloating the resulting CSS file or JS files... Pre-Style just strips out unused styles.
         className: PreStyle`
+          font-weight: bold;
           text-align: center;
         `
       }
@@ -41,7 +42,7 @@ export default class wrapper extends React.Component {
 
     return (<main>
       <h1 {...attrs.h1}>Hello World!</h1>
-      <p {...attrs.p}>This is the React + Webpack + HMR demo. Hit up Github Issues if anything is unclear!</p>
+      <h2 {...attrs.h2}>This is a React + Pre-Style + Webpack + Hot Module Reloading demo</h2>
     </main>);
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-pre-style",
-  "version": "1.0.9-alpha",
+  "version": "1.0.0",
   "description": "Babel plugin for Pre-Style",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "url": "http://soluml.com"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.16.0"
   },
   "license": "MIT",
   "bugs": {
@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/soluml/babel-plugin-pre-style#readme",
   "dependencies": {
-    "pre-style": "^1.0.9-alpha"
+    "pre-style": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.13.0",
-    "eslint-config-airbnb": "^13.0.0",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-plugin-import": "^2.18.2"
   }
 }

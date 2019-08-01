@@ -1,4 +1,4 @@
 node_modules
-bundle.js
+dist
 _atomic.scss
 _atomic.scss.classNames.js
